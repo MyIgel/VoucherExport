@@ -1,0 +1,25 @@
+{
+  "type": "engelsystem-plugin",
+  "name": "engelsystem/voucher-export",
+  "description": "Allows exporting a list of all goodie scores, worked hours etc per user when email_goodie is checked. Export: /admin/vouchers",
+  "version": "0.0.1-beta",
+  "license": "LGPL-2.0-or-later",
+  "homepage": "https://engelsystem.de",
+  "authors": [
+    {
+      "name": "Igel",
+      "email": "CongressVoucherWann@MyIgel.name"
+    }
+  ],
+  "extra": {
+    "routes": {
+      "/admin/vouchers": "Engelsystem\\VoucherExport\\Controller@index",
+      "/admin/vouchers/export": [ "Engelsystem\\VoucherExport\\Controller@export", "POST"]
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Engelsystem\\VoucherExport\\": "src/"
+    }
+  }
+}

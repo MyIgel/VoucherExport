@@ -1,0 +1,8 @@
+msgid "voucher_export.title"
+msgstr "Voucher Export"
+
+msgid "voucher_export.export"
+msgstr "Voucher Export generieren"
+
+msgid "voucher_export.form.export"
+msgstr "Exportieren"
