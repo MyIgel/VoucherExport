@@ -37,7 +37,7 @@ class Controller extends BaseController
         $users = User::query()
             ->leftJoin('users_settings', 'users_settings.user_id', 'users.id')
             ->where('email_goodie', true)
-            ->with(['state', 'worklogs'])
+            ->with(['state', 'settings', 'worklogs'])
             ->get();
 
         $data = [];
@@ -52,10 +52,11 @@ class Controller extends BaseController
                 $hours += round($shift->end->timestamp - $shift->start->timestamp) / 60 / 60;
             }
 
-            $data[] = [
+            $entry = [
                 'id' => $user->id,
                 'nick' => $user->name,
                 'email' => $user->email,
+                'email_human' => (int)$user->settings->email_human,
                 'hours' => Carbon::formatDuration(CarbonInterval::minutes(
                     round($hours * 60)
                 ), '%dh %02dm'),
@@ -63,7 +64,20 @@ class Controller extends BaseController
                     round(Goodie::userScore($user) * 60)
                 ), '%dh %02dm'),
                 'force_active' => (int)$user->state->force_active,
+                'force_food' => (int)$user->state->force_food,
+                'arrived' => (int)$user->state->arrived,
+                'info' => $user->state->user_info,
             ];
+
+            $entry['probably_eligible'] = $entry['arrived'];
+            if($entry['info']) {
+                $entry['probably_eligible'] = '?';
+            }
+            if($entry['force_active']) {
+                $entry['probably_eligible'] = 1;
+            }
+
+            $data[] = $entry;
         }
 
         $name = 'voucher-export_' . Carbon::now()->format('Ymd-His') . '.csv';
